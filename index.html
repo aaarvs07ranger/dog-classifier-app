@@ -33,7 +33,7 @@
             formData.append('file', file);
 
             try {
-                const response = await fetch("https://celena-psychomotor-nonsaleably.ngrok-free.dev", {
+                const response = await fetch("https://celena-psychomotor-nonsaleably.ngrok-free.dev/predict", {
                     method: "POST",
                     body: formData
                 });
