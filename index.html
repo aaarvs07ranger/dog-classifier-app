@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dog Breed Classifier</title>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 20px; }
+        #result { font-size: 24px; color: green; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>Dog Breed Classifier</h1>
+
+    <input type="file" id="fileInput" accept="image/*">
+    <button onclick="uploadImage()">Predict Breed</button>
+
+    <img id="preview" width="300" style="display:none; margin-top:20px;">
+
+    <div id="result"></div>
+
+    <script>
+        async function uploadImage() {
+            const file = document.getElementById('fileInput').files[0];
+            if (!file) return alert("Please select an image.");
+
+            // Show preview
+            const preview = document.getElementById("preview");
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch("http://localhost:8000/predict", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                document.getElementById("result").innerText =
+                    `Predicted Breed: ${data.breed} (${(data.confidence * 100).toFixed(1)}% confidence)`;
+
+            } catch (error) {
+                document.getElementById("result").innerText =
+                    "Error: Could not reach prediction server.";
+            }
+        }
+    </script>
+
+</body>
+</html>
